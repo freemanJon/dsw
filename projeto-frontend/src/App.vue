@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-header">
+  <div id="app" style="margin-top:0px">
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="height:80px">
+      <div class="navbar-header" style="margin-right:1200px;margin-top:40px">
         <span class="navbar-brand" href="#">Shared4U</span>
       </div>
 
@@ -19,10 +19,7 @@
             <a class="link" @click="logout">Logout</a>
           </li>
           
-          <li class="login-commands" v-if="!$root.credentials">
-            <router-link class="link" :to="{ name: 'login' }">Login</router-link> | 
-            <router-link class="link" :to="{ name: 'create-account' }">Criar conta</router-link>
-          </li>
+          
         </ul>
       </div>
     </nav>
@@ -51,7 +48,7 @@
 <style>
 #app {
   font-family: Helvetica, Arial, sans-serif;
-  margin-top: 60px;
+  margin-top: 0px;
 }
 .container {
   width: 100% !important;

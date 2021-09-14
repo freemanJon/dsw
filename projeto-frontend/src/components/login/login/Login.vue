@@ -1,20 +1,23 @@
 <template lang="html" >
   <div class="login row" v-if="!$root.credentials" >
     <div class="col-md-5 col-md-offset-4 text-left" 
-    style="border: 5px solid black;background-color:white;height:450px">
+    style="border: 1px solid #e0e0e0;background-color:white;height:400px">
       <h2 class="form-title" style="margin-left:150px;margin-top:20px">Login</h2>
      
       <form @submit.prevent="processForm" style="margin-top:40px">
         <div class="label-float">
-          <input type="text"  id="username" placeholder=" " v-model="form.email">
+          <input type="text"  id="username" placeholder=" " v-model="form.email" style="background-color:white">
             <label >Insira seu email</label>
           <span class="error" v-if="error.all">{{error.all}}</span>
         </div>
 
         <div class="label-float" style="margin-top:40px" >
-          <input type="password"  id="password" placeholder=" " v-model="form.senha" style="margin-botton:0px" >
+          <input type="password"  id="password" placeholder=" " v-model="form.senha" style="margin-botton:0px;background-color:white" >
            <label >Insira sua senha</label>
-           
+           <span class="error" v-if="error.senha">{{error.senha}}</span>
+           <button type="button" id="eye" style="background-color:white;border:none">
+               <img v-bind:src="eyeImg"  alt="eye" />
+           </button>
         </div>
 
         <div style="align-items: left;margin-top:40px;margin-left:16px">
@@ -49,12 +52,15 @@
 
 <script>
   import axios from 'axios';
+  
+  const img = require('../../../assets/eye.png')
 
   export default {
     data() {
       return {
         form: { email: "", senha: "" },
-        error: { }
+        error: { },
+         eyeImg: img
       }
     },
 
@@ -72,6 +78,33 @@
       }
     }
   }
+
+window.onload=function(){
+
+
+  var pwShown = 0;
+
+document.getElementById("eye").addEventListener("click", function () {
+    if (pwShown == 0) {
+        pwShown = 1;
+        show();
+    } else {
+        pwShown = 0;
+        hide();
+    }
+}, false);
+}
+  function show() {
+    var p = document.getElementById('password');
+    p.setAttribute('type', 'text');
+}
+
+function hide() {
+    var p = document.getElementById('password');
+    p.setAttribute('type', 'password');
+}
+
+
 </script>
 
 <style lang="css" scoped>
@@ -144,7 +177,7 @@ div.link-criar-conta {
   margin-top: -6px;
   color: #3951b2;
 }
-body{ background-color: black;}
+
 
 
 #pass {
