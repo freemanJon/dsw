@@ -24,8 +24,10 @@ import ListaItemCompartilhado from './components/item/ListaItemCompartilhado.vue
 import NovoItemCompartilhado from './components/item/NovoItemCompartilhado.vue'
 import AtualizaItemCompartilhado from './components/item/AtualizaItemCompartilhado.vue'
 import RemoveItemCompartilhado from './components/item/RemoveItemCompartilhado.vue'
+import bootstrap from './bootstrap'
 
 Vue.use(Router)
+Vue.use(bootstrap)
 
 const router = new Router({
   mode: 'history',

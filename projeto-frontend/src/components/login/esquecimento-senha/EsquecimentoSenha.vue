@@ -42,7 +42,7 @@
 
     methods: {
       processForm: function() {
-        axios.post(this.$root.config.url + "/api/usuario/esqueci", this.form)
+        axios.post( "http://localhost:9090/api/usuario/esqueci", this.form)
           .then(response => {
             this.$router.replace('token-sent');
             this.error = {};

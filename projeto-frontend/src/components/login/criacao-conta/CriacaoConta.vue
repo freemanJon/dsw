@@ -59,7 +59,7 @@
 
     methods: {
       processForm: function() {
-        axios.post(this.$root.config.url + "/api/usuario/novo", this.form)
+        axios.post("http://localhost:9090/api/usuario/novo", this.form)
           .then(response => {
             this.$router.replace('account-created');
             this.error = {};

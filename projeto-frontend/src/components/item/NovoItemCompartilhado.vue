@@ -62,7 +62,7 @@ export default {
 
   methods: {
     processForm: function() {
-      axios.put("/api/item/novo", this.item, this.httpOptions)
+      axios.put("http://localhost:9090/api/item/novo", this.item, this.httpOptions)
         .then(response => {
           this.success = true;
           this.error = {};

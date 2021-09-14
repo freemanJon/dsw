@@ -78,7 +78,7 @@ export default {
 
   methods: {
     processForm: function() {
-      axios.get("/api/item/lista?sort=&per_page=10&page=" + this.page, this.httpOptions)
+      axios.get("http://localhost:9090/api/item/lista?sort=&per_page=10&page=" + this.page, this.httpOptions)
         .then(response => {
           this.items = response.data.data.data;
           this.page = response.data.data.current_page;

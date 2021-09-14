@@ -62,7 +62,7 @@ export default {
 
   methods: {
     processForm: function() {
-      axios.post("/api/item/atualiza", this.item, this.httpOptions)
+      axios.post("http://localhost:9090/api/item/atualiza", this.item, this.httpOptions)
         .then(response => {
           this.success = true;
           this.error = {};

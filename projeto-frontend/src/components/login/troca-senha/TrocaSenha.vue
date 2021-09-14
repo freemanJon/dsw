@@ -52,7 +52,7 @@
 
     methods: {
       processForm: function() {
-        axios.post(this.$root.config.url + "/api/usuario/trocaSenha", this.form, this.httpOptions)
+        axios.post("http://localhost:9090/api/usuario/trocaSenha", this.form, this.httpOptions)
           .then(response => {
             this.$router.replace('changed');
             this.error = {};

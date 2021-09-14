@@ -52,7 +52,7 @@ export default {
 
   methods: {
     remove: function() {
-      axios.delete("/api/item/" + this.item.id, this.httpOptions)
+      axios.delete("http://localhost:9090/api/item/" + this.item.id, this.httpOptions)
         .then(response => {
           this.success = true;
           this.error = false;
