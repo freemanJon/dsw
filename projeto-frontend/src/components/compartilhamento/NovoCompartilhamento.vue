@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="form-items-compartilhados row" v-if="this.$root.credentials">
     <div class="col-md-10 col-md-offset-1 text-left">
-      <h2 class="form-title">Novo item compartilhado</h2>
-      <h6 class="form-subtitle">Entre com os dados do novo item compartilhado.</h6>
+      <h2 class="form-title">Novo compartilhamento</h2>
+      <h6 class="form-subtitle">Entre com os dados do novo compartilhamento.</h6>
 
       <div class="success" v-if="success">
         Os dados do item foram salvos.
@@ -10,25 +10,18 @@
 
       <form @submit.prevent="processForm">
         <div class="form-group">
-          <label for="nome">Nome</label>
-          <input type="text" class="form-control" id="nome" placeholder="Entre o nome do item" v-model="item.nome">
-          <span class="error" v-if="error.nome">{{error.nome}}</span>
+          <label for="email">Email</label>
+          <input type="text" class="form-control" id="email" placeholder="Entre com email do destinatario" v-model="compartilhamento.emailDestinatario">
         </div>
 
         <div class="form-group">
-          <label for="descricao">Descrição</label>
-          <textarea rows="3" cols="80" class="form-control" id="descricao" placeholder="Descreva o item" v-model="item.descricao"/>
-          <span class="error" v-if="error.descricao">{{error.descricao}}</span>
+          <label for="dataInicio">Data Inicio</label>
+          <input type="date" class="form-control" id="dataInicio" v-model="compartilhamento.dataInicio"/>
         </div>
 
         <div class="form-group">
-          <label for="tipo">Tipo</label>
-          <select class="form-control" id="tipo" v-model="item.tipo">
-            <option value="">Selecione o tipo do item</option>
-            <option value="UNICO">Item único</option>
-            <option value="MULTIPLO">Item múltiplo</option>
-          </select>
-          <span class="error" v-if="error.tipo">{{error.tipo}}</span>
+          <label for="dataTermino">Data Termino</label>
+          <input type="date" class="form-control" id="dataInicio" v-model="compartilhamento.dataTermino"/>
         </div>
 
         <button type="submit" class="btn btn-primary">Envia</button>
@@ -43,10 +36,10 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      item: { nome: "", descricao: "", tipo: "" },
+      compartilhamento: {emailDestinatario: "", dataInicio: "", dataTermino: "", idItem: this.$route.params.id},
       response:{},
       error: {},
-
+      itens:{},
       success: false,
 
       httpOptions: {
@@ -62,7 +55,9 @@ export default {
 
   methods: {
     processForm: function() {
-      axios.post("http://localhost:9090/api/item/novo", this.item, this.httpOptions)
+      this.compartilhamento.dataInicio = this.compartilhamento.dataInicio + "T00:00:00"
+      this.compartilhamento.dataTermino = this.compartilhamento.dataTermino + "T00:00:00"
+      axios.post("http://localhost:9090/api/compartilhamento/novo", this.compartilhamento, this.httpOptions)
         .then(response => {
           this.response = response;
           this.success = true;
@@ -75,8 +70,10 @@ export default {
     },
 
     goBackToList: function() {
-      this.$router.replace('/item/list');
-    }
+      this.$router.push({
+        name: "item-getById",
+        params: { id: this.$route.params.id}
+    })}
   }
 }
 </script>

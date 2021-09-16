@@ -93,7 +93,7 @@ public class CompartilhamentoController
 		return ControllerResponse.success();
 	}
 	
-	@PutMapping(value = "/{id}/{acao}")
+	@GetMapping(value = "/{id}/{acao}")
 	public ResponseEntity<ResponseData> mudarStatus(@PathVariable("id") long id, @PathVariable("acao") String acao)
 	{
 		log.info("Alterando status do compartilhamento: {}", id);
@@ -170,7 +170,7 @@ public class CompartilhamentoController
 	 * Ação que recupera lista de compartilhamentos
 	 */
 	@GetMapping(value = "/lista")
-	public ResponseEntity<ResponseData> lista(@RequestBody RequestListaItensDTO request)
+	public ResponseEntity<ResponseData> lista(@RequestParam int page, @RequestParam int per_page)
 	{
 		log.info("Listando compartilhamentos destinatario");
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -183,16 +183,18 @@ public class CompartilhamentoController
 		if (usuario == null)
 			return ControllerResponse.fail("Não foi possível recuperar os dados do usuário a partir das credenciais.");
 		
-		Pageable pageable = PageRequest.of(request.getPage() -1, request.getPer_page());
+		Pageable pageable = PageRequest.of(page-1, per_page);
 		compartilhamentos = compartilhamentoRepositorio.findByUsuarioId(usuario.getId(), pageable);
-		PageDTO<CompartilhamentoDTO> result = new PageDTO<CompartilhamentoDTO>(compartilhamentos.getTotalElements(), request.getPage(), request.getPer_page());
+		PageDTO<CompartilhamentoDTO> result = new PageDTO<CompartilhamentoDTO>(compartilhamentos.getTotalElements(), page, per_page);
 		
 		compartilhamentos.forEach(compartilhamento -> {
 			CompartilhamentoDTO dto = new CompartilhamentoDTO();
 			dto.setId(compartilhamento.getId());
 			dto.setNome(compartilhamento.getItem().getNome());
-			dto.setNome_usuario(compartilhamento.getUsuario().getNome());
+			dto.setNome_usuario(compartilhamento.getItem().getUsuario().getNome());
 			dto.setStatus(this.RetornaStatusAtual(compartilhamento));
+			dto.setData_inicio(compartilhamento.getDataInicio());
+			dto.setData_termino(compartilhamento.getDataTermino());
 			result.add(dto);
 		});
 		
@@ -213,7 +215,7 @@ public class CompartilhamentoController
 		if (usuario == null)
 			return ControllerResponse.fail("Não foi possível recuperar os dados do usuário a partir das credenciais.");
 		
-		long countAbertos = compartilhamentoRepositorio.contarCompartilhamentosAbertos();
+		long countAbertos = compartilhamentoRepositorio.contarCompartilhamentosAbertos(usuario.getId());
 		ResponseTotalAbertos totalAbertos = new ResponseTotalAbertos();
 		totalAbertos.setTotal(countAbertos);
 		return ControllerResponse.success(totalAbertos);
@@ -265,6 +267,10 @@ public class CompartilhamentoController
 	private String nome_usuario;
 	
 	private String status;
+	
+	private LocalDate data_inicio;
+	
+	private LocalDate data_termino;
 }
 
 @Data class ResponseTotalAbertos

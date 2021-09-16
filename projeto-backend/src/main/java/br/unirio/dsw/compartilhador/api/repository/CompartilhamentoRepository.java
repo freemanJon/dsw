@@ -24,6 +24,6 @@ public interface CompartilhamentoRepository extends JpaRepository<Compartilhamen
 
 	List<Compartilhamento> findByUsuarioIdAndAceito(Long usuarioId, boolean aceito);
 	
-	@Query("SELECT count(*) FROM Compartilhamento c WHERE c.aceito = 0 AND c.rejeitado = 0 AND c.canceladoDono = 0 AND c.canceladoUsuario = 0") 
-	long contarCompartilhamentosAbertos();
+	@Query("SELECT count(*) FROM Compartilhamento c WHERE c.usuario.id = :ownerId AND c.aceito = 0 AND c.rejeitado = 0 AND c.canceladoDono = 0 AND c.canceladoUsuario = 0") 
+	long contarCompartilhamentosAbertos(@Param("ownerId") Long ownerId);
 }

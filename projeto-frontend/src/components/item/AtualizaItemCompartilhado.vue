@@ -11,14 +11,29 @@
       <form @submit.prevent="processForm">
         <div class="form-group">
           <label for="nome">Nome</label>
-          <input type="text" class="form-control" id="nome" placeholder="Entre o nome do item" v-model="item.nome">
-          <span class="error" v-if="error.nome">{{error.nome}}</span>
+          <input
+            type="text"
+            class="form-control"
+            id="nome"
+            placeholder="Entre o nome do item"
+            v-model="item.nome"
+          />
+          <span class="error" v-if="error.nome">{{ error.nome }}</span>
         </div>
 
         <div class="form-group">
           <label for="descricao">Descrição</label>
-          <textarea rows="3" cols="80" class="form-control" id="descricao" placeholder="Descreva o item" v-model="item.descricao"/>
-          <span class="error" v-if="error.descricao">{{error.descricao}}</span>
+          <textarea
+            rows="3"
+            cols="80"
+            class="form-control"
+            id="descricao"
+            placeholder="Descreva o item"
+            v-model="item.descricao"
+          />
+          <span class="error" v-if="error.descricao">{{
+            error.descricao
+          }}</span>
         </div>
 
         <div class="form-group">
@@ -28,7 +43,7 @@
             <option value="UNICO">Item único</option>
             <option value="MULTIPLO">Item múltiplo</option>
           </select>
-          <span class="error" v-if="error.tipo">{{error.tipo}}</span>
+          <span class="error" v-if="error.tipo">{{ error.tipo }}</span>
         </div>
 
         <button type="submit" class="btn btn-primary">Envia</button>
@@ -38,46 +53,52 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-  props: ['item'],
+  props: ["item"],
 
   data() {
     return {
       error: {},
-
+      response: {},
       success: false,
 
       httpOptions: {
-          baseURL: this.$root.config.url,
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.$root.credentials.token
-          }
+        baseURL: this.$root.config.url,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.$root.credentials.token,
+        },
       },
-    }
+    };
   },
 
   methods: {
     processForm: function() {
-      axios.post("http://localhost:9090/api/item/atualiza", this.item, this.httpOptions)
-        .then(response => {
+      axios
+        .put(
+          "http://localhost:9090/api/item/atualiza",
+          this.item,
+          this.httpOptions
+        )
+        .then((response) => {
+          this.response = response;
           this.success = true;
           this.error = {};
           setTimeout(this.goBackToList, 3000);
         })
-        .catch(error => {
+        .catch((error) => {
           this.error = error.response.data.errors;
         });
     },
 
     goBackToList: function() {
-      this.$router.replace('/item/list');
-    }
-  }
-}
+      this.$router.replace("/item/list");
+    },
+  },
+};
 </script>
 
 <style lang="css" scoped>

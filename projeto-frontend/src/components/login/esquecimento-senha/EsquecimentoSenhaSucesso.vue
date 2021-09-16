@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="token-enviado row">
+  <div class="token-enviado row d-flex align-items-center justify-content-center mt-3">
     <div class="col-md-4 col-md-offset-4 text-left">
       <h2 class="form-title">Token enviado!</h2>
       <h6 class="form-subtitle">Um token para recuperação de senha foi enviado para o seu e-mail. Clique no link deste e-mail para entrar com uma nova senha.</h6>

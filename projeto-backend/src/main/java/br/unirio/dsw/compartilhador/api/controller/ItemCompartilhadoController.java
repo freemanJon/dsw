@@ -265,6 +265,8 @@ public class ItemCompartilhadoController
 			dto.setNome(compartilhamento.getItem().getNome());
 			dto.setNome_usuario(compartilhamento.getUsuario().getNome());
 			dto.setStatus(this.RetornaStatusAtual(compartilhamento));
+			dto.setData_inicio(compartilhamento.getDataInicio());
+			dto.setData_termino(compartilhamento.getDataTermino());
 			compartilhamentosDTO.add(dto);
 		});
 		itemDTO.setCompartilhamentos(compartilhamentosDTO);

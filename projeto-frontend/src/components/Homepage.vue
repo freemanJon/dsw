@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="container">
     <div v-if="this.$root.credentials">
-      <div v-if="countCompartilhamentosNovos != 0" class="row">
+      <div v-if="countCompartilhamentosNovos != 0" class="row mt-5">
         <div class="col-12">
           <div class="card">
             <div class="card-header">
@@ -14,7 +14,7 @@
               </p>
               <router-link
                 class="link btn btn-primary"
-                :to="{ name: 'home' }"
+                :to="{ name: 'compartilhamento-list' }"
                 replace
                 >Ir para Compartilhamentos</router-link
               >
@@ -56,6 +56,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      error:null,
       countCompartilhamentosNovos: 0,
       httpOptions: {
         baseURL: this.$root.config.url,
@@ -78,7 +79,6 @@ export default {
   methods: {
     contarCompartilhamentosNovos: function() {
       if (this.$root.credentials != null) {
-        console.log(this.httpOptions);
         axios
           .get(
             "http://localhost:9090/api/compartilhamento/abertos",
@@ -88,7 +88,6 @@ export default {
             this.countCompartilhamentosNovos = parseInt(
               response.data.data.total
             );
-            console.log(response);
           })
           .catch((error) => {
             this.error = error.response.data.errors;

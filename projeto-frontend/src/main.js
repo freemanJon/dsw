@@ -24,6 +24,16 @@ import ListaItemCompartilhado from './components/item/ListaItemCompartilhado.vue
 import NovoItemCompartilhado from './components/item/NovoItemCompartilhado.vue'
 import AtualizaItemCompartilhado from './components/item/AtualizaItemCompartilhado.vue'
 import RemoveItemCompartilhado from './components/item/RemoveItemCompartilhado.vue'
+import DetalheItemCompartilhado from './components/item/DetalheItemCompartilhado.vue'
+
+/* Compartilhamentos */
+import NovoCompartilhamento from './components/compartilhamento/NovoCompartilhamento.vue'
+import ListaCompartilhamentos from './components/compartilhamento/ListaCompartilhamentos.vue'
+import AceitarCompartilhamento from './components/compartilhamento/AceitarCompartilhamento.vue'
+import RejeitarCompartilhamento from './components/compartilhamento/RejeitarCompartilhamento.vue'
+import CancelarDonoCompartilhamento from './components/compartilhamento/CancelarDonoCompartilhamento.vue'
+import CancelarUsuarioCompartilhamento from './components/compartilhamento/CancelarUsuarioCompartilhamento.vue'
+
 import bootstrap from './bootstrap'
 
 Vue.use(Router)
@@ -103,6 +113,46 @@ const router = new Router({
             component: RemoveItemCompartilhado,
             props: true
         },
+
+        {
+            path: '/item/:id',
+            name: 'item-getById',
+            component: DetalheItemCompartilhado
+        },
+        {
+            path: '/compartilhamento/list',
+            name: 'compartilhamento-list',
+            component: ListaCompartilhamentos
+        },
+        {
+            path: '/compartilhamento/:id',
+            name: 'compartilhamento-new',
+            component: NovoCompartilhamento
+        },
+        {
+            path: '/compartilhamento/aceitar',
+            name: 'compartilhamento-aceitar',
+            component: AceitarCompartilhamento,
+            props: true
+        },
+        {
+            path: '/compartilhamento/rejeitar',
+            name: 'compartilhamento-rejeitar',
+            component: RejeitarCompartilhamento,
+            props: true
+        },
+        {
+            path: '/compartilhamento/cancelarDono',
+            name: 'compartilhamento-cancelarDono',
+            component: CancelarDonoCompartilhamento,
+            props: true
+        },
+        {
+            path: '/compartilhamento/cancelarUsuario',
+            name: 'compartilhamento-cancelarUsuario',
+            component: CancelarUsuarioCompartilhamento,
+            props: true
+        }
     ]
 })
 
