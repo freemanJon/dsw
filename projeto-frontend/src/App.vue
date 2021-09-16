@@ -1,10 +1,10 @@
 <template>
   <div id="app" style="margin-top:0px">
-    <div>
+    <div >
       <nav
         class="navbar navbar-expand-lg navbar-light bg-light navbar-inverse navbar-fixed-top"
       >
-        <div>
+        <div class="m-3">
           <router-link class="navbar-brand" :to="{ name: 'home' }"
             >Unirio Compartilha+</router-link
           >
@@ -34,19 +34,19 @@
               <span class="p-2">Olá {{ $root.credentials.nome }}.</span>
             </li>
             <li class="nav-item active">
-              <router-link class="link btn btn-primary" :to="{ name: 'home' }"
+              <router-link class="link btn btn-link" :to="{ name: 'home' }"
                 >Tela inicial</router-link
               >
             </li>
             <li class="nav-item">
               <router-link
-                class="link btn btn-primary"
+                class="link btn btn-link"
                 :to="{ name: 'item-list' }"
                 >Meus itens</router-link
               >
             </li>
             <li class=" nav-item">
-              <router-link class="link btn btn-primary" :to="{ name: 'login' }"
+              <router-link class="link btn btn-link" :to="{ name: 'compartilhamento-list' }"
                 >Compartilhamentos</router-link
               >
             </li>

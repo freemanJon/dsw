@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="senha-reinicializada row">
+  <div class="senha-reinicializada row d-flex align-items-center justify-content-center mt-3">
     <div class="col-md-4 col-md-offset-4 text-left">
       <h2 class="form-title">Senha trocada!</h2>
       <h6 class="form-subtitle">A sua senha foi trocada. Você pode utilizar esta nova senha para acessar o sistema.</h6>

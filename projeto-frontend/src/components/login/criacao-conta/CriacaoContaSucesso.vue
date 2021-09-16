@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="conta-criada row">
+  <div class="conta-criada row d-flex align-items-center justify-content-center mt-3">
     <div class="col-md-4 col-md-offset-4 text-left">
       <h2 class="form-title">Conta registrada!</h2>
       <h6 class="form-subtitle">Faça o login para entrar no sistema.</h6>

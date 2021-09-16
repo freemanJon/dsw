@@ -4,25 +4,10 @@
       <div class="col-md-10 col-md-offset-1 text-left">
         <div>
           <div class="header">
-            <h2 class="form-title">Itens Compartilhados</h2>
-          </div>
-          <div class="new-button">
-            <button type="button" class="btn btn-primary" @click="novo">
-              Novo Item
-            </button>
+            <h2 class="form-title">Compartilhamentos</h2>
           </div>
           <div class="clear"></div>
         </div>
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-4">
-        <label>Nome:</label>
-        <input type="text" class="form-control" v-model="search_nome" />
-      </div>
-      <div class="col-4">
-        <label>Descricao:</label>
-        <input type="text" class="form-control" v-model="search_descricao" />
       </div>
     </div>
     <div class="row mt-5">
@@ -30,33 +15,37 @@
         <table class="table" id="tbItens">
           <thead>
             <tr>
-              <th>Nome</th>
-              <th>Descrição</th>
-              <th>Tipo</th>
-              <th>Editar</th>
-              <th>Excluir</th>
-              <th>Ver</th>
+              <th>Item</th>
+              <th>Dono</th>
+              <th>Status</th>
+              <th>Data Inicio</th>
+              <th>Data Termino</th>
+              <th>Aceitar</th>
+              <th>Recusar</th>
+              <th>Cancelar</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr v-for="item in filteredItems" :key="item">
-              <td>{{ item.nome }}</td>
-              <td>{{ item.descricao }}</td>
-              <td>{{ item.tipo }}</td>
+            <tr v-for="compartilhamento in compartilhamentos" :key="compartilhamento">
+              <td>{{ compartilhamento.nome }}</td>
+              <td>{{ compartilhamento.nome_usuario }}</td>
+              <td>{{ compartilhamento.status }}</td>
+              <td>{{ compartilhamento.data_inicio }}</td>
+              <td>{{ compartilhamento.data_termino }}</td>
               <td>
-                <button class="btn btn-primary" @click="edita(item)">
-                  Editar
+                <button v-if="compartilhamento.status == 'Aberto'" class="btn btn-primary" @click="aceita(compartilhamento)">
+                  Aceitar
                 </button>
               </td>
               <td>
-                <button class="btn btn-danger" @click="remove(item)">
-                  Excluir
+                <button v-if="compartilhamento.status == 'Aberto'" class="btn btn-danger" @click="recusa(compartilhamento)">
+                  Recusar
                 </button>
               </td>
               <td>
-                <button class="btn btn-secondary" @click="getById(item.id)">
-                  Ver
+                <button v-if="compartilhamento.status != 'Aberto' && compartilhamento.status != 'Cancelado pelo usuario' && compartilhamento.status != 'Cancelado pelo dono'" class="btn btn-danger" @click="cancelaUsuario(compartilhamento)">
+                  Cancelar
                 </button>
               </td>
             </tr>
@@ -125,11 +114,9 @@ import axios from "axios";
 export default {
   data() {
     return {
-      search_nome: "",
-      search_descricao: "",
       page: 1,
       totalPages: 1,
-      items: [],
+      compartilhamentos: [],
 
       httpOptions: {
         baseURL: this.$root.config.url,
@@ -150,12 +137,12 @@ export default {
     processForm: function() {
       axios
         .get(
-          "http://localhost:9090/api/item/lista?sort=&per_page=10&page=" +
+          "http://localhost:9090/api/compartilhamento/lista?sort=&per_page=10&page=" +
             this.page,
           this.httpOptions
         )
         .then((response) => {
-          this.items = response.data.data.data;
+          this.compartilhamentos = response.data.data.data;
           this.page = response.data.data.current_page;
           this.totalPages = response.data.data.last_page;
           this.error = {};
@@ -174,45 +161,27 @@ export default {
       this.processForm();
     },
 
-    novo: function() {
-      this.$router.push({ name: "item-new" });
-    },
-
-    edita: function(item) {
+    aceita: function(compartilhamento) {
       this.$router.push({
-        name: "item-update",
-        params: { item: item },
+        name: "compartilhamento-aceitar",
+        params: { compartilhamento: compartilhamento },
       });
     },
 
-    remove: function(item) {
+    recusa: function(compartilhamento) {
       this.$router.push({
-        name: "item-delete",
-        params: { item: item },
+        name: "compartilhamento-rejeitar",
+        params: { compartilhamento: compartilhamento },
       });
     },
 
-    getById: function(idItem) {
+    cancelaUsuario: function(compartilhamento) {
       this.$router.push({
-        name: "item-getById",
-        params: { id: idItem },
+        name: "compartilhamento-cancelarUsuario",
+        params: { compartilhamento: compartilhamento },
       });
-    },
-  },
-
-  computed: {
-    filteredItems() {
-      return this.items.filter((item) => {
-        return (
-          item.nome.toLowerCase().indexOf(this.search_nome.toLowerCase()) >
-            -1 &&
-          item.descricao
-            .toLowerCase()
-            .indexOf(this.search_descricao.toLowerCase()) > -1
-        );
-      });
-    },
-  },
+    }
+  }
 };
 </script>
 

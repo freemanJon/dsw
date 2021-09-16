@@ -1,5 +1,5 @@
 <template lang="html" >
-  <div class="login row" v-if="!$root.credentials" >
+  <div class="login row d-flex align-items-center justify-content-center" v-if="!$root.credentials" >
     <div class="col-md-5 col-md-offset-4 text-left" 
     style="border: 1px solid #e0e0e0;background-color:white;height:400px">
       <h2 class="form-title" style="margin-left:150px;margin-top:20px">Login</h2>
@@ -15,9 +15,6 @@
           <input type="password"  id="password" placeholder=" " v-model="form.senha" style="margin-botton:0px;background-color:white" >
            <label >Insira sua senha</label>
            <span class="error" v-if="error.senha">{{error.senha}}</span>
-           <button type="button" id="eye" style="background-color:white;border:none">
-               <img v-bind:src="eyeImg"  alt="eye" />
-           </button>
         </div>
 
         <div style="align-items: left;margin-top:40px;margin-left:16px">
@@ -39,7 +36,7 @@
       <div class="link-criar-conta">
        <p style="display:inline-block;margin-left:16px">Ainda não tem uma conta? </p>
         <router-link class="link" :to="{ name: 'create-account' }" replace style="display:inline-block;">
-          Cadastre-se
+           Cadastre-se
         </router-link>
       </div>
       </div>
@@ -54,8 +51,7 @@
     data() {
       return {
         form: { email: "", senha: "" },
-        error: { },
-         eyeImg: "../../../assets/eye.png"
+        error: { }
       }
     },
 
@@ -65,7 +61,6 @@
           .then(response => {
             this.$root.credentials = response.data.data;
             this.$router.replace('/');
-            console.log(this.$root.credentials.token);
             this.error = {};
           })
           .catch(error => {
@@ -74,32 +69,6 @@
       }
     }
   }
-
-window.onload=function(){
-
-
-  var pwShown = 0;
-
-document.getElementById("eye").addEventListener("click", function () {
-    if (pwShown == 0) {
-        pwShown = 1;
-        show();
-    } else {
-        pwShown = 0;
-        hide();
-    }
-}, false);
-}
-  function show() {
-    var p = document.getElementById('password');
-    p.setAttribute('type', 'text');
-}
-
-function hide() {
-    var p = document.getElementById('password');
-    p.setAttribute('type', 'password');
-}
-
 
 </script>
 

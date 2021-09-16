@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="recuperacao-senha row" v-if="!this.$root.credentials">
+  <div class="recuperacao-senha row d-flex align-items-center justify-content-center mt-3" v-if="!this.$root.credentials">
     <div class="col-md-5 col-md-offset-4 text-left" style="border: 1px solid #e0e0e0;background-color:white;height:400px;margin-top:0px">
       <h2 class="form-title" style="margin-left:120px;margin-top:20px">Recuperar senha</h2>
       <h6 class="form-subtitle" style="font-weight:700">Entre com o seu e-mail no formulário abaixo. Um link para troca de senha será enviado por e-mail.</h6>
@@ -54,8 +54,8 @@
 
     methods: {
       processForm: function() {
-        axios.post( "http://localhost:9090/api/usuario/esqueci", this.form)
-          .then(response => {
+        axios.post("http://localhost:9090/api/usuario/esqueci", this.form)
+          .then(() => {
             this.$router.replace('token-sent');
             this.error = {};
           })
