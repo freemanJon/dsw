@@ -9,11 +9,11 @@
       </div>
 
       <form @submit.prevent="processForm">
-        <div class="form-group">
+        <div class="form-group mt-3">
           <label for="nome">Nome</label>
           <input
             type="text"
-            class="form-control"
+            class="form-control "
             id="nome"
             placeholder="Entre o nome do item"
             v-model="item.nome"
@@ -21,7 +21,7 @@
           <span class="error" v-if="error.nome">{{ error.nome }}</span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mt-3">
           <label for="descricao">Descrição</label>
           <textarea
             rows="3"
@@ -36,7 +36,7 @@
           }}</span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mt-3">
           <label for="tipo">Tipo</label>
           <select class="form-control" id="tipo" v-model="item.tipo">
             <option value="">Selecione o tipo do item</option>
@@ -46,7 +46,7 @@
           <span class="error" v-if="error.tipo">{{ error.tipo }}</span>
         </div>
 
-        <button type="submit" class="btn btn-primary">Envia</button>
+        <button type="submit" class="btn btn-primary mt-3">Envia</button>
       </form>
     </div>
   </div>
