@@ -1,29 +1,77 @@
 <template>
   <div id="app" style="margin-top:0px">
-    <nav class="navbar navbar-inverse navbar-fixed-top" style="height:80px">
-      <div class="navbar-header" style="margin-right:1200px;margin-top:40px">
-        <span class="navbar-brand" href="#">Shared4U</span>
-      </div>
+    <div>
+      <nav
+        class="navbar navbar-expand-lg navbar-light bg-light navbar-inverse navbar-fixed-top"
+      >
+        <div>
+          <router-link class="navbar-brand" :to="{ name: 'home' }"
+            >Unirio Compartilha+</router-link
+          >
 
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-left">
-            <li v-if="$root.credentials">
-              <router-link class="link" :to="{ name: 'item-list' }">Itens</router-link>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+
+        <div
+          class="collapse navbar-collapse d-flex justify-content-end"
+          id="navbarNav "
+        >
+          <ul v-if="$root.credentials" class="navbar-nav ">
+            <li
+              class="nav-item d-flex align-items-center"
+              v-if="$root.credentials"
+            >
+              <span class="p-2">Olá {{ $root.credentials.nome }}.</span>
             </li>
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right">
-          <li class="user-commands" v-if="$root.credentials">
-            <span class="greetings">Olá {{$root.credentials.nome}}.</span> |
-            <router-link class="link" :to="{ name: 'change-password' }" replace>Troca senha</router-link> |
-            <a class="link" @click="logout">Logout</a>
-          </li>
-          
-          
-        </ul>
-      </div>
-    </nav>
-
+            <li class="nav-item active">
+              <router-link class="link btn btn-primary" :to="{ name: 'home' }"
+                >Tela inicial</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link
+                class="link btn btn-primary"
+                :to="{ name: 'item-list' }"
+                >Meus itens</router-link
+              >
+            </li>
+            <li class=" nav-item">
+              <router-link class="link btn btn-primary" :to="{ name: 'login' }"
+                >Compartilhamentos</router-link
+              >
+            </li>
+            <li class="nav-item" v-if="$root.credentials">
+              <router-link
+                class="link btn btn-secondary"
+                :to="{ name: 'change-password' }"
+                replace
+                >Troca senha</router-link
+              >
+            </li>
+            <li class="nav-item" v-if="$root.credentials">
+              <a class="link btn btn-danger" @click="logout">Logout</a>
+            </li>
+          </ul>
+          <ul v-else class="navbar-nav ">
+            <li class=" nav-item">
+              <router-link class="link btn btn-primary" :to="{ name: 'login' }"
+                >Entrar</router-link
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
     <div class="container">
       <router-view></router-view>
     </div>
@@ -31,18 +79,18 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return { }
-    },
+export default {
+  data() {
+    return {};
+  },
 
-    methods: {
-      logout: function() {
-        this.$root.credentials = null;
-        this.$router.replace('/');
-      }
-    }
-  }
+  methods: {
+    logout: function() {
+      this.$root.credentials = null;
+      this.$router.replace("/");
+    },
+  },
+};
 </script>
 
 <style>
@@ -54,31 +102,11 @@
   width: 100% !important;
 }
 span.greetings {
-  color: white;
+  padding-top: 30px;
+  color: black;
   margin: 0 4px;
 }
 li {
   margin: 0 4px;
-}
-li.login-commands {
-  color: white;
-  padding-top: 15px;
-  margin-right: 32px;
-}
-li.login-commands a {
-  display: inline;
-  padding: 15px 8px;
-}
-li.user-commands {
-  color: white;
-  padding-top: 15px;
-  margin-right: 32px;
-}
-li.user-commands span.greetings {
-  margin-right: 12px;
-}
-li.user-commands a {
-  display: inline;
-  padding: 15px 8px;
 }
 </style>

@@ -33,10 +33,7 @@
                   </router-link>
               </div>
         </div>
-  
-        
       </form>
-
     
       <div style="align-items:left;margin-top:40px;">
       <div class="link-criar-conta">
@@ -52,15 +49,13 @@
 
 <script>
   import axios from 'axios';
-  
-  const img = require('../../../assets/eye.png')
 
   export default {
     data() {
       return {
         form: { email: "", senha: "" },
         error: { },
-         eyeImg: img
+         eyeImg: "../../../assets/eye.png"
       }
     },
 
@@ -70,6 +65,7 @@
           .then(response => {
             this.$root.credentials = response.data.data;
             this.$router.replace('/');
+            console.log(this.$root.credentials.token);
             this.error = {};
           })
           .catch(error => {
