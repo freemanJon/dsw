@@ -14,21 +14,21 @@
 
       <div>
         <label class="label">Nome</label>
-        <p class="text" >{{compartilhamento.nome}}</p>
+        <p class="text mt-3" >{{compartilhamento.nome}}</p>
 
         <label class="label">Nome do Dono</label>
-        <p class="text" >{{compartilhamento.nome_usuario}}</p>
+        <p class="text mt-3" >{{compartilhamento.nome_usuario}}</p>
 
         <label class="label">Status</label>
-        <p class="text" >{{compartilhamento.status}}</p>
+        <p class="text mt-3" >{{compartilhamento.status}}</p>
 
         <label class="label">Data Inicio</label>
-        <p class="text" >{{compartilhamento.data_inicio}}</p>
+        <p class="text mt-3" >{{compartilhamento.data_inicio}}</p>
 
         <label class="label">Data Termino</label>
-        <p class="text" >{{compartilhamento.data_termino}}</p>
+        <p class="text mt-3" >{{compartilhamento.data_termino}}</p>
 
-        <button type="submit" class="btn btn-danger" @click="mudarStatus()">Cancelar o compartilhamento</button>
+        <button type="submit" class="btn btn-danger mt-3" @click="mudarStatus()">Cancelar o compartilhamento</button>
       </div>
     </div>
   </div>

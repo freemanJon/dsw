@@ -13,16 +13,16 @@
       </div>
 
       <div>
-        <p class="label">Nome</label>
-        <p class="text" >{{item.nome}}</p>
+        <label class="label">Nome</label>
+        <p class="text mt-3" >{{item.nome}}</p>
 
-        <p class="label">Descrição</label>
-        <p class="text" >{{item.descricao}}</p>
+        <label class="label">Descrição</label>
+        <p class="text mt-3" >{{item.descricao}}</p>
 
-        <p class="label">Tipo</label>
-        <p class="text" >{{item.tipo}}</p>
+        <label class="label">Tipo</label>
+        <p class="text mt-3" >{{item.tipo}}</p>
 
-        <button type="submit" class="btn btn-danger" @click="remove">Remover o item</button>
+        <button type="submit" class="btn btn-danger mt-3" @click="remove">Remover o item</button>
       </div>
     </div>
   </div>
@@ -53,12 +53,12 @@ export default {
   methods: {
     remove: function() {
       axios.delete("http://localhost:9090/api/item/" + this.item.id, this.httpOptions)
-        .then(response => {
+        .then(() => {
           this.success = true;
           this.error = false;
           setTimeout(this.goBackToList, 3000);
         })
-        .catch(error => {
+        .catch(() => {
           this.error = true;
           this.success = false;
         });
