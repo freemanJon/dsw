@@ -56,7 +56,7 @@ public class ItemCompartilhadoController
 	 * Ação que lista os itens compartilhados de um usuário
 	 */
 	@GetMapping(value = "/lista")
-	public ResponseEntity<ResponseData> list(@RequestBody RequestListaItensDTO request)
+	public ResponseEntity<ResponseData> list(@RequestParam int page, @RequestParam int per_page)
 	{
 		log.info("Listando items dono");
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -65,17 +65,14 @@ public class ItemCompartilhadoController
 			return ControllerResponse.fail("Não há um usuário logado no sistema.");
 
         Usuario usuario = usuarioRepositorio.findByEmail(username);
-        Page<ItemCompartilhado> itens;
+
 		if (usuario == null)
 			return ControllerResponse.fail("Não foi possível recuperar os dados do usuário a partir das credenciais.");
 		
-		Pageable pageable = PageRequest.of(request.getPage() -1, request.getPer_page());
-		if(request.getNome() == null && request.getDescricao() == null)
-			itens = itemRepositorio.findByUsuarioId(usuario.getId(), pageable);
-		else	
-			itens = itemRepositorio.findByNomeOrDescricaoContaining(usuario.getId(), request.getNome(), request.getDescricao(), pageable);
+		Pageable pageable = PageRequest.of(page-1, per_page);
+		Page<ItemCompartilhado> itens = itemRepositorio.findByUsuarioId(usuario.getId(), pageable);
 
-		PageDTO<ItemCompartilhadoDTO> result = new PageDTO<ItemCompartilhadoDTO>(itens.getTotalElements(), request.getPage(), request.getPer_page());
+		PageDTO<ItemCompartilhadoDTO> result = new PageDTO<ItemCompartilhadoDTO>(itens.getTotalElements(), page, per_page);
 		
 		itens.forEach(item -> {
 			ItemCompartilhadoDTO dto = new ItemCompartilhadoDTO();
