@@ -1,7 +1,8 @@
 package br.unirio.dsw.compartilhador.api.controller;
 
 import java.util.Optional;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.unirio.dsw.compartilhador.api.model.Compartilhamento;
 import br.unirio.dsw.compartilhador.api.model.ItemCompartilhado;
 import br.unirio.dsw.compartilhador.api.model.TipoItemCompartilhado;
 import br.unirio.dsw.compartilhador.api.model.Usuario;
@@ -54,7 +56,7 @@ public class ItemCompartilhadoController
 	 * Ação que lista os itens compartilhados de um usuário
 	 */
 	@GetMapping(value = "/lista")
-	public ResponseEntity<ResponseData> list(@RequestParam int page, @RequestParam int per_page)
+	public ResponseEntity<ResponseData> list(@RequestBody RequestListaItensDTO request)
 	{
 		log.info("Listando items dono");
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -63,14 +65,17 @@ public class ItemCompartilhadoController
 			return ControllerResponse.fail("Não há um usuário logado no sistema.");
 
         Usuario usuario = usuarioRepositorio.findByEmail(username);
-
+        Page<ItemCompartilhado> itens;
 		if (usuario == null)
 			return ControllerResponse.fail("Não foi possível recuperar os dados do usuário a partir das credenciais.");
 		
-		Pageable pageable = PageRequest.of(page-1, per_page);
-		Page<ItemCompartilhado> itens = itemRepositorio.findByUsuarioId(usuario.getId(), pageable);
+		Pageable pageable = PageRequest.of(request.getPage() -1, request.getPer_page());
+		if(request.getNome() == null && request.getDescricao() == null)
+			itens = itemRepositorio.findByUsuarioId(usuario.getId(), pageable);
+		else	
+			itens = itemRepositorio.findByNomeOrDescricaoContaining(usuario.getId(), request.getNome(), request.getDescricao(), pageable);
 
-		PageDTO<ItemCompartilhadoDTO> result = new PageDTO<ItemCompartilhadoDTO>(itens.getTotalElements(), page, per_page);
+		PageDTO<ItemCompartilhadoDTO> result = new PageDTO<ItemCompartilhadoDTO>(itens.getTotalElements(), request.getPage(), request.getPer_page());
 		
 		itens.forEach(item -> {
 			ItemCompartilhadoDTO dto = new ItemCompartilhadoDTO();
@@ -87,7 +92,7 @@ public class ItemCompartilhadoController
 	/**
 	 * Ação que cria um novo item compartilhado
 	 */
-	@PutMapping(value = "/novo")
+	@PostMapping(value = "/novo")
 	public ResponseEntity<ResponseData> novo(@RequestBody NovoItemCompartilhadoForm form, BindingResult result)
 	{
 		log.info("Criando um novo item compartilhado: {}", form.toString());
@@ -135,7 +140,7 @@ public class ItemCompartilhadoController
 	/**
 	 * Ação que atualiza os dados de um item compartilhado
 	 */
-	@PostMapping(value = "/atualiza")
+	@PutMapping(value = "/atualiza")
 	public ResponseEntity<ResponseData> atualiza(@RequestBody AtualizaItemCompartilhadoForm form, BindingResult result)
 	{
 		log.info("Atualizando um item compartilhado: {}", form.toString());
@@ -221,6 +226,72 @@ public class ItemCompartilhadoController
         itemRepositorio.save(item.get());
 		return ControllerResponse.success();
 	}
+	
+	/**
+	 * Ação que recupera o item pelo ID
+	 */
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<ResponseData> getById(@PathVariable("id") long id)
+	{
+		log.info("Recuperando item compartilhado: {}", id);
+		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (username == null)
+			return ControllerResponse.fail("Não há um usuário logado no sistema.");
+
+        Usuario usuario = usuarioRepositorio.findByEmail(username);
+
+		if (usuario == null)
+			return ControllerResponse.fail("Não foi possível recuperar os dados do usuário a partir das credenciais.");
+		
+		Optional<ItemCompartilhado> item = itemRepositorio.findById(id);
+		
+		if (!item.isPresent())
+			return ControllerResponse.fail("O item compartilhado não foi encontrado.");
+		
+		if (item.get().getUsuario().getId() != usuario.getId())
+			return ControllerResponse.fail("O item compartilhado não pertence ao usuário logado.");
+
+		if (item.get().isRemovido())
+			return ControllerResponse.fail("O item compartilhado já foi removido.");
+		
+		String tipo = (item.get().getTipo() == TipoItemCompartilhado.UNICO) ? "unico" : "multiplo";
+		
+		List<CompartilhamentoDTO> compartilhamentosDTO = new ArrayList<CompartilhamentoDTO>();
+		ItemCompartilhadoComRegistrosDTO itemDTO = new ItemCompartilhadoComRegistrosDTO();
+		itemDTO.setNome(item.get().getNome());
+		itemDTO.setDescricao(item.get().getDescricao());
+		itemDTO.setTipo(tipo);
+		item.get().getCompartilhamentos().forEach(compartilhamento -> {
+			CompartilhamentoDTO dto = new CompartilhamentoDTO();
+			dto.setId(compartilhamento.getId());
+			dto.setNome(compartilhamento.getItem().getNome());
+			dto.setNome_usuario(compartilhamento.getUsuario().getNome());
+			dto.setStatus(this.RetornaStatusAtual(compartilhamento));
+			compartilhamentosDTO.add(dto);
+		});
+		itemDTO.setCompartilhamentos(compartilhamentosDTO);
+		return ControllerResponse.success(itemDTO);
+	}
+	
+	private String RetornaStatusAtual(Compartilhamento compartilhamento) {
+		
+		if(compartilhamento.isAceito()) {
+			return "Aceito";
+		}
+		else if(compartilhamento.isCanceladoUsuario()) {
+			return "Cancelado pelo usuario";
+		}
+		else if(compartilhamento.isCanceladoDono()) {
+			return "Cancelado pelo dono";
+		}
+		else if(compartilhamento.isRejeitado()) {
+			return "Rejeitado";
+		}
+		else {
+			return "Aberto";
+		}
+	}
 }
 
 /**
@@ -267,4 +338,30 @@ public class ItemCompartilhadoController
 	private String descricao;
 	
 	private String tipo;
+}
+
+@Data class ItemCompartilhadoComRegistrosDTO
+{
+	private long id;
+	
+	private String nome;
+	
+	private String descricao;
+	
+	private String tipo;
+	
+	private List<CompartilhamentoDTO> compartilhamentos;
+	
+}
+/**
+ * Classe que representa filtro para listar determinados itens 
+ * 
+ * @author User
+ */
+@Data class RequestListaItensDTO
+{
+	private int page;
+	private int per_page;
+	private String nome;
+	private String descricao;
 }

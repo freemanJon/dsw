@@ -21,6 +21,11 @@ public class PageDTO<T>
 	
 	private @Getter @Setter int per_page;	
 	
+	public PageDTO()
+	{
+		this.data = new ArrayList<T>();
+	}
+	
 	public PageDTO(long total, int currentPage, int pageSize)
 	{
 		this.data = new ArrayList<T>();
