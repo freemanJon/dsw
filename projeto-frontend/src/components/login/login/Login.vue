@@ -26,7 +26,7 @@
 
                <div class="link-recuperar-senha">
                   <router-link class="link" :to="{ name: 'forgot-password' }" replace>
-                   Recuperar a minha senha <> Teste
+                   Recuperar a minha senha <> Teste 2
                   </router-link>
               </div>
         </div>
